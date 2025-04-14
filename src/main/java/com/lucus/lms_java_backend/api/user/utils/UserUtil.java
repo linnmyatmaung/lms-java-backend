@@ -10,6 +10,7 @@ import com.lucus.lms_java_backend.api.user.dto.UserDto;
 import com.lucus.lms_java_backend.api.user.model.User;
 import com.lucus.lms_java_backend.api.user.repository.UserRepository;
 import com.lucus.lms_java_backend.config.utils.DtoUtil;
+import com.lucus.lms_java_backend.security.service.JwtService;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
