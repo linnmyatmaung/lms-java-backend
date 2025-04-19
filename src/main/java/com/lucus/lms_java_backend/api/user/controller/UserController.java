@@ -104,7 +104,7 @@ public class UserController {
         return ResponseUtil.buildResponse(request, successResponse, 0L);
     }
 
-    @PostMapping("/change-password")
+    @PostMapping("/${api.user.change-password}")
     public ResponseEntity<ApiResponse> changePassword(
             @Valid @RequestBody ChangePasswordRequest changePasswordRequest,
             HttpServletRequest request,
@@ -136,7 +136,7 @@ public class UserController {
         return ResponseUtil.buildResponse(request, successResponse, 0L);
     }
 
-    @GetMapping("/exists")
+    @GetMapping("/${api.user.check-username-exists}")
     public ResponseEntity<ApiResponse> checkUsernameExists(
             @RequestParam("username") String username, HttpServletRequest request) {
 

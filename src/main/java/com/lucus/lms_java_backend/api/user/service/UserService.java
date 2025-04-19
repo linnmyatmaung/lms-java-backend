@@ -8,6 +8,8 @@ package com.lucus.lms_java_backend.api.user.service;
 
 
 import com.lucus.lms_java_backend.api.user.dto.CreateUserRequest;
+import com.lucus.lms_java_backend.config.response.dto.ApiResponse;
+
 
 public interface UserService {
     Object retrieveUsers(int page, int limit) throws Exception;
