@@ -7,9 +7,10 @@
 package com.lucus.lms_java_backend.security.config;
 
 
+import com.lucus.lms_java_backend.security.exception.CustomAuthenticationEntryPoint;
+import com.lucus.lms_java_backend.security.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
-import org.oneProjectOneMonth.lms.security.exception.CustomAuthenticationEntryPoint;
-import org.oneProjectOneMonth.lms.security.utils.JwtUtil;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authorization.AuthorizationDecision;

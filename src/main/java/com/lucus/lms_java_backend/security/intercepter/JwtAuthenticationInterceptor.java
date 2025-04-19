@@ -6,6 +6,7 @@
 
 package com.lucus.lms_java_backend.security.intercepter;
 
+import com.lucus.lms_java_backend.security.service.JwtService;
 import io.jsonwebtoken.Claims;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;

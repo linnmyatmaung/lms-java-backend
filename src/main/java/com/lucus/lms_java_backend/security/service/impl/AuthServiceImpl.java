@@ -172,7 +172,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void logout(String accessToken) {
+    public ApiResponse logout(String accessToken) {
         if (accessToken != null && accessToken.startsWith("Bearer ")) {
             String token = accessToken.substring(7);
             Claims claims = jwtService.validateToken(token);
@@ -183,10 +183,32 @@ public class AuthServiceImpl implements AuthService {
                             "User not found. Cannot proceed with logout."));
 
             log.debug("Revoking access token for user: {}", user.getEmail());
-            jwtService.revokeToken(token);
+            try {
+                jwtService.revokeToken(token);
+                log.info("User logged out successfully");
+                return ApiResponse.builder()
+                        .success(1)
+                        .code(200)
+                        .data(true)
+                        .message("Logout successful")
+                        .build();
+
+            } catch (SecurityException ex) {
+                log.warn("Logout failed due to security reasons: {}", ex.getMessage());
+                throw ex;
+            } catch (Exception ex) {
+                log.error("Unexpected error during logout", ex);
+                throw new RuntimeException("An error occurred during logout.");
+            }
         }
 
-        log.info("User successfully logged out.");
+        // Handle case when accessToken is null or does not start with "Bearer "
+        return ApiResponse.builder()
+                .success(0)
+                .code(400)
+                .data(false)
+                .message("Invalid access token")
+                .build();
     }
 
     @Override

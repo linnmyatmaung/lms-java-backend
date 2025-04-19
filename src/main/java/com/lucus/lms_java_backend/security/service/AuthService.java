@@ -16,7 +16,7 @@ public interface AuthService {
 
     ApiResponse registerUser(RegisterRequest registerRequest);
 
-    void logout(String accessToken);
+    ApiResponse logout(String accessToken);
 
     ApiResponse refreshToken(String refreshToken);
 

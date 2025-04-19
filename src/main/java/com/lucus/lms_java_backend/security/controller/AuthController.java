@@ -51,33 +51,15 @@ public class AuthController {
     public ResponseEntity<ApiResponse> logout(
             @RequestHeader(value = "Authorization", required = false) String accessToken,
             HttpServletRequest request) {
-        log.info("Received logout request");
-
-        if ((accessToken == null || !accessToken.startsWith("Bearer "))) {
-
-            log.warn("Invalid or missing tokens in logout request");
-            throw new SecurityException("Invalid or missing authorization tokens.");
+           log.info("Received logout request");
+            ApiResponse response=authService.logout(accessToken);
+        if (response.getSuccess() == 1) {
+            log.info("User logout successfully");
+        } else {
+            log.warn("Logout failed for security reason");
         }
-
-        try {
-            authService.logout(accessToken);
-            ApiResponse response = ApiResponse.builder()
-                    .success(1)
-                    .code(200)
-                    .data(true)
-                    .message("Logout successful")
-                    .build();
-
-            log.info("User logged out successfully");
-
             return ResponseUtil.buildResponse(request, response, 0L);
-        } catch (SecurityException ex) {
-            log.warn("Logout failed due to security reasons: {}", ex.getMessage());
-            throw ex;
-        } catch (Exception ex) {
-            log.error("Unexpected error during logout", ex);
-            throw new RuntimeException("An error occurred during logout.");
-        }
+
     }
 
     @PostMapping("/register")
