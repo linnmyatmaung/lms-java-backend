@@ -28,7 +28,7 @@ import java.util.Map;
 @RequestMapping("/${api.base.path}/auth")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "Auth", description = "User Api")
+@Tag(name = "Auth", description = "Auth Api")
 public class AuthController {
 
     private final AuthService authService;
