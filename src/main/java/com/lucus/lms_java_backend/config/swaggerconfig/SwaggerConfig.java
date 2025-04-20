@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
         servers = {
-                @Server(url = "http://localhost:8080", description = "Local Server"),
+                @Server(url = "http://localhost:3000", description = "Local Server"),
                 @Server(url = "https://lms-java-production.up.railway.app", description = "Production Server")
         }
 )

@@ -6,7 +6,8 @@
 
 package com.lucus.lms_java_backend.security.controller;
 
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import com.lucus.lms_java_backend.config.response.dto.ApiResponse;
 import com.lucus.lms_java_backend.config.response.utils.ResponseUtil;
 import com.lucus.lms_java_backend.security.dto.LoginRequest;
@@ -27,6 +28,7 @@ import java.util.Map;
 @RequestMapping("/${api.base.path}/auth")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Auth", description = "User Api")
 public class AuthController {
 
     private final AuthService authService;
