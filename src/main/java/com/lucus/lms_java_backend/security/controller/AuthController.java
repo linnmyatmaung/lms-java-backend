@@ -6,8 +6,6 @@
 
 package com.lucus.lms_java_backend.security.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import com.lucus.lms_java_backend.config.response.dto.ApiResponse;
 import com.lucus.lms_java_backend.config.response.utils.ResponseUtil;
 import com.lucus.lms_java_backend.security.dto.LoginRequest;
@@ -28,13 +26,13 @@ import java.util.Map;
 @RequestMapping("/${api.base.path}/auth")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "Auth", description = "Auth Api")
 public class AuthController {
 
     private final AuthService authService;
     public final JwtService jwtService;
 
     @PostMapping("/login")
+
     public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
         log.info("Received login attempt for email: {}", loginRequest.getEmail());
 
@@ -50,6 +48,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
+
     public ResponseEntity<ApiResponse> logout(
             @RequestHeader(value = "Authorization", required = false) String accessToken,
             HttpServletRequest request) {
@@ -65,6 +64,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
+
     public ResponseEntity<ApiResponse> register(@Validated @RequestBody RegisterRequest registerRequest,
                                                 HttpServletRequest request) {
         log.info("Received registration request for email: {}", registerRequest.getEmail());
@@ -81,6 +81,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
+
     public ResponseEntity<ApiResponse> refresh(@Validated @RequestBody RefreshTokenData refreshTokenData,
                                                HttpServletRequest request) {
         log.info("Received token refresh request");
@@ -97,6 +98,7 @@ public class AuthController {
     }
 
     @GetMapping("/me")
+
     public ResponseEntity<ApiResponse> getCurrentUser(@RequestHeader("Authorization") String authHeader,
                                                       HttpServletRequest request) {
         log.info("Fetching current authenticated user");

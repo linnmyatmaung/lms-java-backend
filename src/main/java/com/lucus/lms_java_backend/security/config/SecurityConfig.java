@@ -6,11 +6,11 @@
 
 package com.lucus.lms_java_backend.security.config;
 
-
 import com.lucus.lms_java_backend.security.exception.CustomAuthenticationEntryPoint;
 import com.lucus.lms_java_backend.security.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authorization.AuthorizationDecision;
@@ -20,11 +20,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
-import org.springframework.security.core.Authentication;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -55,10 +54,8 @@ public class SecurityConfig {
         auth
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/api/v1/public/**", "/api/v1/users/change-password").permitAll()
-
                 .requestMatchers("/api/v1/users/**").access(hasRole(ROLE_USER))
                 .requestMatchers("/api/v1/admin/**").access(hasRole(ROLE_ADMIN))
-
                 .anyRequest().authenticated();
     }
 
