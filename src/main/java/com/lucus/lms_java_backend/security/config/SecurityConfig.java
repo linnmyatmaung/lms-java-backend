@@ -52,12 +52,19 @@ public class SecurityConfig {
 
     private void configureAuthorization(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry auth) {
         auth
-                .requestMatchers("/api/v1/auth/**").permitAll()
-                .requestMatchers("/api/v1/public/**", "/api/v1/users/change-password").permitAll()
+                .requestMatchers(
+                        "/api/v1/auth/**",
+                        "/api/v1/public/**",
+                        "/api/v1/users/change-password",
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html"
+                ).permitAll()
                 .requestMatchers("/api/v1/users/**").access(hasRole(ROLE_USER))
                 .requestMatchers("/api/v1/admin/**").access(hasRole(ROLE_ADMIN))
                 .anyRequest().authenticated();
     }
+
 
     private AuthorizationManager<RequestAuthorizationContext> hasRole(String requiredRole) {
         return (Supplier<Authentication> authenticationSupplier, RequestAuthorizationContext context) -> {
