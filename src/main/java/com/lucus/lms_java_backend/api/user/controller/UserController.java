@@ -15,6 +15,8 @@ import com.lucus.lms_java_backend.config.response.dto.ApiResponse;
 import com.lucus.lms_java_backend.config.response.dto.PaginatedResponse;
 import com.lucus.lms_java_backend.config.response.utils.ResponseUtil;
 import com.lucus.lms_java_backend.config.utils.PaginationMetaUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,7 @@ import java.util.Map;
 @RequestMapping("/${api.base.path}/users")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "User", description = "User Api")
 public class UserController {
 
     private final UserService userService;
@@ -45,6 +48,7 @@ public class UserController {
      * @return a ResponseEntity containing the result of the user creation process.
      */
     @PostMapping
+    @Operation(summary = "User Signup Api")
     public ResponseEntity<ApiResponse> createUser(
             @Validated @RequestBody CreateUserRequest createUserRequest,
             HttpServletRequest request
@@ -75,6 +79,7 @@ public class UserController {
      * @return a ResponseEntity containing the list of users.
      */
     @GetMapping
+    @Operation(summary = "Get all users")
     public ResponseEntity<ApiResponse> retrieveUsers(
             HttpServletRequest request,
             @RequestParam(value = "page", defaultValue = "1") int page,
@@ -105,6 +110,7 @@ public class UserController {
     }
 
     @PostMapping("/${api.user.change-password}")
+    @Operation(summary = "Change password")
     public ResponseEntity<ApiResponse> changePassword(
             @Valid @RequestBody ChangePasswordRequest changePasswordRequest,
             HttpServletRequest request,
@@ -137,6 +143,7 @@ public class UserController {
     }
 
     @GetMapping("/${api.user.check-username-exists}")
+    @Operation(summary = "Check username exists")
     public ResponseEntity<ApiResponse> checkUsernameExists(
             @RequestParam("username") String username, HttpServletRequest request) {
 

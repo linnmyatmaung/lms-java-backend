@@ -7,38 +7,49 @@
 package com.lucus.lms_java_backend.config.swaggerconfig;
 
 
-
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.servers.Server;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@OpenAPIDefinition(
+        servers = {
+                @Server(url = "http://localhost:8000", description = "Local Server")
+        }
+)
 @Configuration
 public class SwaggerConfig {
 
     @Bean
-    public OpenAPI customOpenAPI() {
+    public OpenAPI openAPI() {
         return new OpenAPI()
+                .addSecurityItem(
+                        new SecurityRequirement()
+                                .addList("Bearer Authentication"))
+                .components(
+                        new Components()
+                                .addSecuritySchemes(
+                                        "Bearer Authentication",
+                                        createAPIKeyScheme()
+                                )
+                )
                 .info(new Info()
-                        .title("LMS Java Backend API")
-                        .description("API documentation for the Learning Management System (LMS)")
-                        .version("1.0.0")
-                        .contact(new Contact()
-                                .name("Lucus LMS Team")
-                                .email("support@lucus-lms.com")
-                                .url("https://lucus-lms.com"))
-                        .license(new License()
-                                .name("MIT")
-                                .url("https://opensource.org/licenses/MIT")))
-                .components(new io.swagger.v3.oas.models.Components()
-                        .addSecuritySchemes("bearerAuth", new SecurityScheme()
-                                .type(SecurityScheme.Type.HTTP)
-                                .scheme("bearer")
-                                .bearerFormat("JWT")))
-                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
+                        .title("LMS System Api")
+                        .description("LMS System")
+                        .version("1.0")
+                );
+    }
+
+
+    private SecurityScheme createAPIKeyScheme() {
+        return new SecurityScheme()
+                .type(SecurityScheme.Type.HTTP)
+                .bearerFormat("JWT")
+                .scheme("bearer");
     }
 }
