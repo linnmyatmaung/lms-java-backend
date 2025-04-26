@@ -16,6 +16,7 @@ import com.lucus.lms_java_backend.api.token.repository.TokenRepository;
 import com.lucus.lms_java_backend.api.user.dto.UserDto;
 import com.lucus.lms_java_backend.api.user.model.User;
 import com.lucus.lms_java_backend.api.user.repository.UserRepository;
+import com.lucus.lms_java_backend.api.user.utils.PasswordValidatorUtil;
 import com.lucus.lms_java_backend.api.user.utils.UserUtil;
 import com.lucus.lms_java_backend.config.response.dto.ApiResponse;
 import com.lucus.lms_java_backend.config.utils.DtoUtil;
@@ -115,6 +116,16 @@ public class AuthServiceImpl implements AuthService {
                     .message("Email is already in use")
                     .build();
         }
+
+        if (!PasswordValidatorUtil.isValid(registerRequest.getPassword())) {
+            log.warn("User registration failed: Weak password provided.");
+            return ApiResponse.builder()
+                    .success(0)
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("Password does not meet security requirements.")
+                    .build();
+        }
+
 
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
                 .orElseThrow(() -> new RuntimeException("Role not found in database!"));

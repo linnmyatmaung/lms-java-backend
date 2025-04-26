@@ -86,7 +86,12 @@ public class UserServiceImpl implements UserService {
             User user = modelMapper.map(createUserRequest, User.class);
             String uniqueUsername = userUtil.generateUniqueUsername(createUserRequest.getName());
             user.setUsername(uniqueUsername);
-
+            // Add password validation here
+            if (!PasswordValidatorUtil.isValid(createUserRequest.getPassword())) {
+                log.warn("User creation failed: Weak password provided.");
+                throw new IllegalArgumentException("Password does not meet security requirements.");
+            }
+            user.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
             user.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
 
             Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
