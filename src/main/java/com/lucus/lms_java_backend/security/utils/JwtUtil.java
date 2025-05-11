@@ -21,11 +21,14 @@ import java.util.Map;
 public class JwtUtil {
 
     private static final Dotenv dotenv = Dotenv.load();
-    private static final String SECRET = dotenv.get("JWT_SECRET_KEY");
+    //private static final String SECRET = dotenv.get("JWT_SECRET_KEY");
+    private static final String SECRET = System.getenv("JWT_SECRET_KEY");
     private static final Key SECRET_KEY;
 
     static {
-        assert SECRET != null;
+        if (SECRET == null) {
+            throw new IllegalStateException("JWT_SECRET_KEY environment variable is missing!");
+        }
         SECRET_KEY = Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
