@@ -16,7 +16,7 @@ WORKDIR /app
 # Copy the built JAR file from the build stage
 COPY --from=build /app/target/lms-java-backend-0.0.1-SNAPSHOT.jar app.jar
 
-EXPOSE 8080  # Optional, but good practice
+EXPOSE 8080
 
 # Set ENTRYPOINT for running Java app
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
