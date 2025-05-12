@@ -6,8 +6,6 @@
 
 package com.lucus.lms_java_backend.security.utils;
 
-
-import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -20,14 +18,12 @@ import java.util.Map;
 
 public class JwtUtil {
 
-    private static final Dotenv dotenv = Dotenv.load();
-    //private static final String SECRET = dotenv.get("JWT_SECRET_KEY");
     private static final String SECRET = "bh5pYpZP4QuAlHFF4NljKIQD9QWU8HmX2wyKAiBaArk=";
     private static final Key SECRET_KEY;
 
     static {
-        if (SECRET == null) {
-            throw new IllegalStateException("JWT_SECRET_KEY environment variable is missing!");
+        if (SECRET == null || SECRET.isEmpty()) {
+            throw new IllegalStateException("JWT_SECRET_KEY environment variable is missing or empty!");
         }
         SECRET_KEY = Keys.hmacShaKeyFor(SECRET.getBytes());
     }
@@ -35,7 +31,6 @@ public class JwtUtil {
     private static final String ISSUER = "teamSmurfs-backend";
 
     public static String generateToken(Map<String, Object> claims, String role, String subject, long expirationMillis) {
-        System.out.println(SECRET_KEY);
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
