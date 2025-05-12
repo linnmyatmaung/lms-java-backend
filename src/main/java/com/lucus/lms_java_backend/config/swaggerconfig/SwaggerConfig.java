@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
         servers = {
-                @Server(url = "https://lms-java-sasv.onrender.com", description = "Development Server"),
+                @Server(url = "https://lms-java-backend.onrender.com", description = "Development Server"),
                 @Server(url = "http://localhost:8080", description = "Local Server")
         }
 )
