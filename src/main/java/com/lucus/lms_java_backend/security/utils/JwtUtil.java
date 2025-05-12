@@ -22,7 +22,7 @@ public class JwtUtil {
 
     private static final Dotenv dotenv = Dotenv.load();
     //private static final String SECRET = dotenv.get("JWT_SECRET_KEY");
-    private static final String SECRET = System.getenv("JWT_SECRET_KEY");
+    private static final String SECRET = "bh5pYpZP4QuAlHFF4NljKIQD9QWU8HmX2wyKAiBaArk=";
     private static final Key SECRET_KEY;
 
     static {
