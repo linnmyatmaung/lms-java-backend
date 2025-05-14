@@ -7,7 +7,10 @@
 package com.lucus.lms_java_backend.api.user.repository;
 
 
+import com.lucus.lms_java_backend.api.role.model.RoleName;
 import com.lucus.lms_java_backend.api.user.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -32,4 +35,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = "SELECT COUNT(*) FROM user WHERE username = :username", nativeQuery = true)
     int countByUsername(@Param("username") String username);
+    // Get users who have the 'USER' role with pagination
+    @Query("SELECT u FROM User u JOIN u.roles r WHERE r.name = :roleName")
+  Page<User> findUsersByRoleName(@Param("roleName") RoleName roleName, Pageable pageable);
 }

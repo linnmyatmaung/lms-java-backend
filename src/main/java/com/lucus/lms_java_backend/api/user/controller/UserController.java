@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/${api.base.path}/users")
+@RequestMapping("/${api.base.path}/${api.user.base.path}")
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "User", description = "User Api")
