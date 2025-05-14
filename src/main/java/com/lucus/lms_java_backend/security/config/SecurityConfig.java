@@ -55,9 +55,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/api/v1/public/**", "/api/v1/users/change-password").permitAll()
                 .requestMatchers( "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                .requestMatchers("/api/v1/users/**").access(hasRole(ROLE_USER))
+                .requestMatchers("/api/v1/users/**").access(hasRole(ROLE_ADMIN))
                 .requestMatchers("/api/v1/admin/**").access(hasRole(ROLE_ADMIN))
-
                 .anyRequest().authenticated();
     }
 
