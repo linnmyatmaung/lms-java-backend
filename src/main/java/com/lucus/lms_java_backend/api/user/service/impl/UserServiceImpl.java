@@ -41,8 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static java.util.Objects.requireNonNull;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -96,7 +94,6 @@ public class UserServiceImpl implements UserService {
 
         User user = buildNewUser(request);
         Role defaultRole = getDefaultUserRole();
-
         user.setRoles(Set.of(defaultRole));
         User savedUser = userRepository.save(user);
 

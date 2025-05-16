@@ -65,9 +65,11 @@ public class EntityUtil {
      */
     public static <T> void saveEntityWithoutReturn(JpaRepository<T, Long> repository, T entity, String entityName) {
         T savedEntity = repository.save(entity);
+        /*
         if (savedEntity instanceof Identifiable && ((Identifiable) savedEntity).getId() == null) {
             throw new EntityCreationException("Failed to create the " + entityName);
         }
+        */
     }
 
     /**
@@ -87,7 +89,7 @@ public class EntityUtil {
     public static <T> List<T> getAllEntities(JpaRepository<T, Long> repository, Sort sort, String entityName) {
         List<T> entities = repository.findAll(sort);
         if (entities.isEmpty()) {
-            return null;
+            throw new EntityNotFoundException("No " + entityName + " entities found.");
         }
         return entities;
     }
@@ -129,18 +131,19 @@ public class EntityUtil {
      * @param <T>        the type of the entity
      * @return the retrieved entity
      */
-    public static <T> T getEntityById(JpaRepository<T, Long> repository, Long id) {
+    public static <T> T getEntityById(JpaRepository<T, Long> repository, Long id,  String entityName) {
         T entity = id > 0 ? repository.findById(id).orElse(null) : null;
         if (entity == null) {
-            throw new EntityNotFoundException("Entity not found with ID: " + id);
+            throw new EntityNotFoundException( entityName + " not found with ID: " + id);
         }
         return entity;
     }
 
-    /**
+    /*
      * Interface for entities that are identifiable by an ID.
-     */
+
     public interface Identifiable {
         Long getId();
     }
+     */
 }

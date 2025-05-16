@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.Customizer;
@@ -53,8 +54,13 @@ public class SecurityConfig {
     private void configureAuthorization(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry auth) {
         auth
                 .requestMatchers("/api/v1/auth/**").permitAll()
-                .requestMatchers("/api/v1/public/**", "/api/v1/users/change-password").permitAll()
+                .requestMatchers("/api/v1/public/**").permitAll()
                 .requestMatchers( "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                // Courses access
+                .requestMatchers(HttpMethod.GET, "/api/v1/courses/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/v1/courses/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/courses/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/courses/**").hasRole("ADMIN")
                 .requestMatchers("/api/v1/users/**").access(hasRole(ROLE_ADMIN))
                 .requestMatchers("/api/v1/admin/**").access(hasRole(ROLE_ADMIN))
                 .anyRequest().authenticated();
