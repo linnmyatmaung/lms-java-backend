@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
         log.info("Changing password for current user.");
 
         UserDto currentUserDto = userUtil.getCurrentUserDto(authHeader);
-        User currentUser = EntityUtil.getEntityById(userRepository, currentUserDto.getId());
+        User currentUser = EntityUtil.getEntityById(userRepository, currentUserDto.getId(), "User");
 
         if (!passwordEncoder.matches(oldPassword, currentUser.getPassword())) {
             throw new IllegalArgumentException("Incorrect old password.");

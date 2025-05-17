@@ -65,11 +65,9 @@ public class EntityUtil {
      */
     public static <T> void saveEntityWithoutReturn(JpaRepository<T, Long> repository, T entity, String entityName) {
         T savedEntity = repository.save(entity);
-        /*
         if (savedEntity instanceof Identifiable && ((Identifiable) savedEntity).getId() == null) {
             throw new EntityCreationException("Failed to create the " + entityName);
         }
-        */
     }
 
     /**
@@ -141,9 +139,9 @@ public class EntityUtil {
 
     /*
      * Interface for entities that are identifiable by an ID.
-
+  */
     public interface Identifiable {
         Long getId();
     }
-     */
+
 }

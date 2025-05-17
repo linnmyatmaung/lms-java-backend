@@ -52,19 +52,36 @@ public class SecurityConfig {
     }
 
     private void configureAuthorization(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry auth) {
-        auth
-                .requestMatchers("/api/v1/auth/**").permitAll()
-                .requestMatchers("/api/v1/public/**").permitAll()
-                .requestMatchers( "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                // Courses access
-                .requestMatchers(HttpMethod.GET, "/api/v1/courses/**").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/v1/courses/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/v1/courses/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/courses/**").hasRole("ADMIN")
-                .requestMatchers("/api/v1/users/**").access(hasRole(ROLE_ADMIN))
-                .requestMatchers("/api/v1/admin/**").access(hasRole(ROLE_ADMIN))
-                .anyRequest().authenticated();
+        // Public
+        auth.requestMatchers(
+                "/api/v1/auth/**",
+                "/api/v1/public/**",
+                "/swagger-ui.html",
+                "/swagger-ui/**",
+                "/v3/api-docs/**").permitAll();
+
+        // Admin only
+        auth.requestMatchers(
+                "/api/v1/users/**",
+                "/api/v1/admin/**").hasAuthority(ROLE_ADMIN);
+
+        // Shared access
+        applyUserReadAdminCRUD(auth, "/api/v1/category/**");
+        applyUserReadAdminCRUD(auth, "/api/v1/course/**");
+        applyUserReadAdminCRUD(auth, "/api/v1/lesson/**");
+
+        auth.anyRequest().authenticated();
     }
+
+    private void applyUserReadAdminCRUD(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry auth, String basePath) {
+        auth.requestMatchers(HttpMethod.GET, basePath).hasAnyAuthority(ROLE_USER, ROLE_ADMIN);
+        auth.requestMatchers(HttpMethod.POST, basePath).hasAuthority(ROLE_ADMIN);
+        auth.requestMatchers(HttpMethod.PUT, basePath).hasAuthority(ROLE_ADMIN);
+        auth.requestMatchers(HttpMethod.DELETE, basePath).hasAuthority(ROLE_ADMIN);
+    }
+
+
+
 
     private AuthorizationManager<RequestAuthorizationContext> hasRole(String requiredRole) {
         return (Supplier<Authentication> authenticationSupplier, RequestAuthorizationContext context) -> {

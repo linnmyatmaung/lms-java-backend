@@ -6,7 +6,7 @@
 
 package com.lucus.lms_java_backend.api.category.model;
 
-
+import com.lucus.lms_java_backend.config.utils.EntityUtil;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class Category implements EntityUtil.Identifiable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

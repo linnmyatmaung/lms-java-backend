@@ -11,7 +11,6 @@ import com.lucus.lms_java_backend.api.role.model.Role;
 import com.lucus.lms_java_backend.api.token.model.Token;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
