@@ -16,8 +16,10 @@ import java.util.HashMap;
 
 public class ResponseUtil {
 
-    public static ResponseEntity<ApiResponse> buildResponse(HttpServletRequest request, ApiResponse response, double requestTime) {
+    public static ResponseEntity<ApiResponse> buildResponse(HttpServletRequest request, ApiResponse response) {
         HttpStatus status = HttpStatus.valueOf(response.getCode());
+        Long startTime = (Long) request.getAttribute("startTime");
+        long duration = (startTime != null) ? System.currentTimeMillis() - startTime : 0;
 
         if (response.getMeta() == null) {
             String method = request.getMethod();
@@ -27,7 +29,7 @@ public class ResponseUtil {
             response.getMeta().put("endpoint", endpoint);
         }
 
-        response.setDuration(Instant.now().getEpochSecond() - requestTime);
+        response.setDuration(duration);
         return new ResponseEntity<>(response, status);
     }
 }

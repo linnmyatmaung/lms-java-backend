@@ -60,7 +60,7 @@ public class AdminController {
                 .message("Admin created successfully")
                 .build();
 
-        return ResponseUtil.buildResponse(request, response, 0L);
+        return ResponseUtil.buildResponse(request, response);
     }
 
     /**
@@ -98,6 +98,6 @@ public class AdminController {
                 .message("Admins retrieved successfully")
                 .build();
 
-        return ResponseUtil.buildResponse(request, response, 0L);
+        return ResponseUtil.buildResponse(request, response);
     }
 }

@@ -8,6 +8,7 @@ package com.lucus.lms_java_backend.config.exception;
 
 import com.lucus.lms_java_backend.config.response.dto.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolationException;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -120,6 +122,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * @return a ResponseEntity containing the ApiResponse.
      */
     private ResponseEntity<ApiResponse> buildErrorResponse(HttpStatus status, String message, String details, HttpServletRequest request) {
+        Long startTime = (Long) request.getAttribute("startTime");
+        long duration = (startTime != null) ? System.currentTimeMillis() - startTime : 0;
         ApiResponse errorResponse = ApiResponse.builder()
                 .success(0)
                 .code(status.value())
@@ -129,7 +133,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                         "method", request.getMethod(),
                         "endpoint", request.getRequestURI()
                 ))
-                .duration(Instant.now().getEpochSecond())
+                .duration(duration)
                 .build();
 
         return new ResponseEntity<>(errorResponse, status);

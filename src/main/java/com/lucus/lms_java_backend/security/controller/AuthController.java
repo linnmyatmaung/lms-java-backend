@@ -38,7 +38,7 @@ public class AuthController {
         log.info("Received login attempt for email: {}", loginRequest.getEmail());
         ApiResponse response = authService.authenticateUser(loginRequest);
         log.info(response.getSuccess() == 1 ? "Login successful for user: {}" : "Login failed for user: {}", loginRequest.getEmail());
-        return ResponseUtil.buildResponse(request, response, 0L);
+        return ResponseUtil.buildResponse(request, response);
     }
 
     @PostMapping("/logout")
@@ -49,7 +49,7 @@ public class AuthController {
         log.info("Received logout request");
         ApiResponse response = authService.logout(accessToken);
         log.info(response.getSuccess() == 1 ? "User logout successfully" : "Logout failed for security reason");
-        return ResponseUtil.buildResponse(request, response, 0L);
+        return ResponseUtil.buildResponse(request, response);
     }
 
     @PostMapping("/register")
@@ -59,7 +59,7 @@ public class AuthController {
         log.info("Received registration request for email: {}", registerRequest.getEmail());
         ApiResponse response = authService.registerUser(registerRequest);
         log.info(response.getSuccess() == 1 ? "User registered successfully: {}" : "Registration failed for email: {}", registerRequest.getEmail());
-        return ResponseUtil.buildResponse(request, response, 0L);
+        return ResponseUtil.buildResponse(request, response);
     }
 
     @PostMapping("/refresh")
@@ -69,7 +69,7 @@ public class AuthController {
         log.info("Received token refresh request");
         ApiResponse response = authService.refreshToken(refreshTokenData.getRefreshToken());
         log.info(response.getSuccess() == 1 ? "Token refreshed successfully" : "Token refresh failed");
-        return ResponseUtil.buildResponse(request, response, 0L);
+        return ResponseUtil.buildResponse(request, response);
     }
 
     @GetMapping("/me")
@@ -79,6 +79,6 @@ public class AuthController {
         log.info("Fetching current authenticated user");
         double requestStartTime = System.currentTimeMillis();
         ApiResponse response = authService.getCurrentUser(authHeader);
-        return ResponseUtil.buildResponse(request, response, requestStartTime);
+        return ResponseUtil.buildResponse(request, response);
     }
 }

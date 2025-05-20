@@ -41,7 +41,7 @@ public class CategoryController {
                .data(createdCategory)
                .message("Category created successfully")
                .build();
-       return ResponseUtil.buildResponse(request, response, 0L);
+       return ResponseUtil.buildResponse(request, response);
    }
 
    @GetMapping
@@ -54,7 +54,7 @@ public class CategoryController {
               .data(category)
               .message("Categories retrieved successfully")
               .build();
-      return ResponseUtil.buildResponse( request , response, 0L);
+      return ResponseUtil.buildResponse( request , response);
    }
 
    @GetMapping("/{id}")
@@ -67,7 +67,7 @@ public class CategoryController {
               .data(category)
               .message("Category retrieved successfully")
               .build();
-      return ResponseUtil.buildResponse(request , response, 0L);
+      return ResponseUtil.buildResponse(request , response);
    }
 
    @PutMapping("/{id}")
@@ -82,7 +82,7 @@ public class CategoryController {
                .data(category)
                .message("Category updated successfully")
                .build();
-       return ResponseUtil.buildResponse(request , response, 0L);
+       return ResponseUtil.buildResponse(request , response);
    }
 
    @DeleteMapping("/{id}")
@@ -94,9 +94,6 @@ public class CategoryController {
                .code(HttpStatus.OK.value())
                .message("Category deleted successfully")
                .build();
-       return ResponseUtil.buildResponse(request , response, 0L);
+       return ResponseUtil.buildResponse(request , response);
    }
-
-
-
 }

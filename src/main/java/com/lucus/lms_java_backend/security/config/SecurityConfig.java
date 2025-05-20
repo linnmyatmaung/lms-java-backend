@@ -10,6 +10,7 @@ import com.lucus.lms_java_backend.security.exception.CustomAuthenticationEntryPo
 import com.lucus.lms_java_backend.security.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,11 +21,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
-import org.springframework.security.core.Authentication;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -58,14 +58,14 @@ public class SecurityConfig {
                 "/api/v1/public/**",
                 "/swagger-ui.html",
                 "/swagger-ui/**",
-                "/v3/api-docs/**").permitAll();
+                "/v3/api-docs/**"
+        ).permitAll();
 
-        // Admin only
-        auth.requestMatchers(
-                "/api/v1/users/**",
-                "/api/v1/admin/**").hasAuthority(ROLE_ADMIN);
+        // Role-based Access
+        auth.requestMatchers("/api/v1/users/**").access(hasRole(ROLE_USER));
+        auth.requestMatchers("/api/v1/admin/**").access(hasRole(ROLE_ADMIN));
 
-        // Shared access
+        // Shared access (Read: USER + ADMIN, Write: ADMIN only)
         applyUserReadAdminCRUD(auth, "/api/v1/category/**");
         applyUserReadAdminCRUD(auth, "/api/v1/course/**");
         applyUserReadAdminCRUD(auth, "/api/v1/lesson/**");
@@ -74,20 +74,30 @@ public class SecurityConfig {
     }
 
     private void applyUserReadAdminCRUD(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry auth, String basePath) {
-        auth.requestMatchers(HttpMethod.GET, basePath).hasAnyAuthority(ROLE_USER, ROLE_ADMIN);
-        auth.requestMatchers(HttpMethod.POST, basePath).hasAuthority(ROLE_ADMIN);
-        auth.requestMatchers(HttpMethod.PUT, basePath).hasAuthority(ROLE_ADMIN);
-        auth.requestMatchers(HttpMethod.DELETE, basePath).hasAuthority(ROLE_ADMIN);
+        auth.requestMatchers(HttpMethod.GET, basePath).access(hasAnyRole(ROLE_USER, ROLE_ADMIN));
+        auth.requestMatchers(HttpMethod.POST, basePath).access(hasRole(ROLE_ADMIN));
+        auth.requestMatchers(HttpMethod.PUT, basePath).access(hasRole(ROLE_ADMIN));
+        auth.requestMatchers(HttpMethod.DELETE, basePath).access(hasRole(ROLE_ADMIN));
     }
 
-
-
-
     private AuthorizationManager<RequestAuthorizationContext> hasRole(String requiredRole) {
-        return (Supplier<Authentication> authenticationSupplier, RequestAuthorizationContext context) -> {
+        return (Supplier<Authentication> authSupplier, RequestAuthorizationContext context) -> {
             HttpServletRequest request = context.getRequest();
             String userRole = getRoleFromToken(request);
             return new AuthorizationDecision(userRole.equals(requiredRole));
+        };
+    }
+
+    private AuthorizationManager<RequestAuthorizationContext> hasAnyRole(String... roles) {
+        return (Supplier<Authentication> authSupplier, RequestAuthorizationContext context) -> {
+            HttpServletRequest request = context.getRequest();
+            String userRole = getRoleFromToken(request);
+            for (String role : roles) {
+                if (userRole.equals(role)) {
+                    return new AuthorizationDecision(true);
+                }
+            }
+            return new AuthorizationDecision(false);
         };
     }
 
