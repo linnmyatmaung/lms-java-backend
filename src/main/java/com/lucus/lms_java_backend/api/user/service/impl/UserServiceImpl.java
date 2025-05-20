@@ -12,6 +12,7 @@ import com.lucus.lms_java_backend.api.token.model.Token;
 import com.lucus.lms_java_backend.api.token.repository.TokenRepository;
 import com.lucus.lms_java_backend.api.user.dto.CreateUserRequest;
 import com.lucus.lms_java_backend.api.user.dto.UserDto;
+import com.lucus.lms_java_backend.api.user.model.Admin;
 import com.lucus.lms_java_backend.api.user.model.User;
 import com.lucus.lms_java_backend.api.user.repository.UserRepository;
 import com.lucus.lms_java_backend.api.user.service.UserService;
@@ -27,6 +28,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,8 +40,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static java.util.Objects.requireNonNull;
 
 @Service
 @RequiredArgsConstructor
@@ -57,12 +59,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PaginatedResponse<UserDto> retrieveUsers(int page, int limit) {
-        log.info("Fetching users - page: {}, limit: {}", page, limit);
+        log.info("Fetching users with USER role - page: {}, limit: {}", page, limit);
 
-        int offset = (page - 1) * limit;
-        List<User> users = userRepository.findUsersWithPagination(offset, limit);
-        long totalItems = userRepository.countUsers();
-        int lastPage = (int) Math.ceil((double) totalItems / limit);
+        Pageable pageable = PageRequest.of(page - 1, limit);
+
+        // Corrected method call: Pass role and pageable
+        Page<User> userPage = userRepository.findUsersByRoleName(RoleName.ROLE_USER, pageable);
+
+        List<User> users = userPage.getContent();
+        long totalItems = userPage.getTotalElements();
+        int lastPage = userPage.getTotalPages();
 
         List<UserDto> userDtos = DtoUtil.mapList(users, UserDto.class, modelMapper);
 
@@ -72,6 +78,7 @@ public class UserServiceImpl implements UserService {
                 .lastPage(lastPage)
                 .build();
     }
+
 
     @Override
     @Transactional
@@ -87,7 +94,6 @@ public class UserServiceImpl implements UserService {
 
         User user = buildNewUser(request);
         Role defaultRole = getDefaultUserRole();
-
         user.setRoles(Set.of(defaultRole));
         User savedUser = userRepository.save(user);
 
@@ -105,7 +111,7 @@ public class UserServiceImpl implements UserService {
         log.info("Changing password for current user.");
 
         UserDto currentUserDto = userUtil.getCurrentUserDto(authHeader);
-        User currentUser = EntityUtil.getEntityById(userRepository, currentUserDto.getId());
+        User currentUser = EntityUtil.getEntityById(userRepository, currentUserDto.getId(), "User");
 
         if (!passwordEncoder.matches(oldPassword, currentUser.getPassword())) {
             throw new IllegalArgumentException("Incorrect old password.");

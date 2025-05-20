@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/${api.base.path}/users")
+@RequestMapping("/${api.base.path}/${api.user.base.path}")
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "User", description = "User Api")
@@ -67,7 +67,7 @@ public class UserController {
                 .message("User created successfully")
                 .build();
 
-        return ResponseUtil.buildResponse(request, successResponse, 0L);
+        return ResponseUtil.buildResponse(request, successResponse);
     }
 
     /**
@@ -106,7 +106,7 @@ public class UserController {
                 .message("Users retrieved successfully")
                 .build();
 
-        return ResponseUtil.buildResponse(request, successResponse, 0L);
+        return ResponseUtil.buildResponse(request, successResponse);
     }
 
     @PostMapping("/${api.user.change-password}")
@@ -125,7 +125,7 @@ public class UserController {
                     .code(HttpStatus.BAD_REQUEST.value())
                     .data(false)
                     .message("New password must be at least 8 characters long and include uppercase, lowercase, a number, and a special character.")
-                    .build(), 0L);
+                    .build());
         }
 
         userService.changePassword(changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword(), authHeader);
@@ -139,7 +139,7 @@ public class UserController {
                 .message("Password changed successfully")
                 .build();
 
-        return ResponseUtil.buildResponse(request, successResponse, 0L);
+        return ResponseUtil.buildResponse(request, successResponse);
     }
 
     @GetMapping("/${api.user.check-username-exists}")
@@ -158,6 +158,6 @@ public class UserController {
                 .message(exists ? "Username already taken" : "Username available")
                 .build();
 
-        return ResponseUtil.buildResponse(request, response, 0L);
+        return ResponseUtil.buildResponse(request, response);
     }
 }
