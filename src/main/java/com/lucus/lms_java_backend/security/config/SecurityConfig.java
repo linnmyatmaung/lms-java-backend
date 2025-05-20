@@ -63,7 +63,7 @@ public class SecurityConfig {
 
         // Role-based Access
         auth.requestMatchers("/api/v1/users/**").access(hasRole(ROLE_ADMIN));
-        auth.requestMatchers("/api/v1/admin/**").access(hasRole(ROLE_USER));
+        auth.requestMatchers("/api/v1/admin/**").access(hasRole(ROLE_ADMIN));
 
         // Shared access (Read: USER + ADMIN, Write: ADMIN only)
         applyUserReadAdminCRUD(auth, "/api/v1/category/**");
